@@ -8,26 +8,30 @@
     tools:context="com.bcepnez.tesseractocr.MainActivity"
     tools:showIn="@layout/activity_main">
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.264" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <ImageButton
+            android:id="@+id/imageButton"
+            android:layout_width="159dp"
+            android:layout_height="218dp"
+            android:layout_marginStart="112dp"
+            android:layout_marginTop="20dp"
+            android:scaleType="fitXY"
+            app:srcCompat="@drawable/cher" />
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/imgview"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/imageButton"/>
 
-    <ImageButton
-        android:id="@+id/imageButton"
-        android:layout_width="159dp"
-        android:layout_height="218dp"
-        android:layout_marginStart="112dp"
-        android:layout_marginTop="84dp"
-        android:scaleType="fitXY"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView"
-        app:srcCompat="@drawable/cher" />
+        <TextView
+            android:id="@+id/textview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/imgview"
+            android:layout_marginBottom="64dp" />
+    </RelativeLayout>
 
 </android.support.constraint.ConstraintLayout>

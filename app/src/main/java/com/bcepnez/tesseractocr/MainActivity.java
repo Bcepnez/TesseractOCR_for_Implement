@@ -1,6 +1,10 @@
 package com.bcepnez.tesseractocr;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -9,9 +13,15 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.IOException;
+
 public class MainActivity extends AppCompatActivity {
+
+    OcrManager manager = new OcrManager();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,11 +43,31 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Toast.makeText(MainActivity.this,"Hello My name is Cherprang",Toast.LENGTH_SHORT).show();
+                Intent gal = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+                startActivityForResult(gal,1);
             }
         });
-        OcrManager manager = new OcrManager();
         manager.initAPI();
         //no err, init API ok!
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        TextView textView = (TextView)findViewById(R.id.textview);
+        ImageView imageView = (ImageView)findViewById(R.id.imgview);
+        if(requestCode == 1 && resultCode == RESULT_OK){
+            Uri uri = data.getData();
+            Bitmap bitmap=null;
+            try {
+                bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            imageView.setImageBitmap(bitmap);
+            String str = manager.startRecognizer(bitmap);
+            Toast.makeText(this,"*|*"+str+"*|*",Toast.LENGTH_LONG).show();
+            textView.setText(str);
+        }
     }
 
     @Override
