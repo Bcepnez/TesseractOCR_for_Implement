@@ -1,4 +1,5 @@
 package com.bcepnez.tesseractocr;
+import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 
 import com.googlecode.tesseract.android.TessBaseAPI;
