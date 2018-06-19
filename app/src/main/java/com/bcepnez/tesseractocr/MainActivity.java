@@ -103,22 +103,28 @@ public class MainActivity extends AppCompatActivity {
                 }
                 crop = true;
             }
+
         }
         if (crop){
-            ProgressDialog process = new ProgressDialog(this);
-            process.setTitle("Please wait a minute");
-            process.setMessage("Process Progress");
-            process.setCancelable(false);
-            process.show();
-            String text = manager.startRecognizer(bitmap);
-            imageView.setImageBitmap(bitmap);
-            textView = (TextView)findViewById(R.id.text1);
-            if (text.length() != 0) textView.setText(text);
-            else textView.setText("No data");
-            process.dismiss();
-            crop = false;
-            splitter(text);
+            tesseractOCR();
         }
+    }
+
+    private void tesseractOCR(){
+        ProgressDialog process = new ProgressDialog(this);
+        process.setTitle("Please wait a minute");
+        process.setMessage("Process Progress");
+        process.setCancelable(false);
+        process.show();
+        String text = manager.startRecognizer(bitmap);
+        imageView.setImageBitmap(bitmap);
+        textView = (TextView)findViewById(R.id.text1);
+        if (text.length() != 0) textView.setText(text);
+        else textView.setText("No data");
+        process.dismiss();
+        crop = false;
+        splitter(text);
+
     }
 
     private void CropImage() {
@@ -187,7 +193,7 @@ public class MainActivity extends AppCompatActivity {
 
     private boolean splitter(String data){
         if (data!=null && data.trim().toUpperCase().startsWith("P")){
-            data.trim().toUpperCase();
+            data = data.trim().toUpperCase();
             String[] splitdata = new String[30];
             int i=0;
             data = data.trim().toUpperCase();
@@ -204,9 +210,11 @@ public class MainActivity extends AppCompatActivity {
 //            for (i = 0;i<splitdata.length;i++) {
 //                    Toast.makeText(this, "^^^Data " + i + " : " + splitdata[i] + "^^^", Toast.LENGTH_SHORT).show();
 //            }
+            CodeMeans codeMeans=new CodeMeans();
             type.setText("Passport Type : "+splitdata[0]);
             if (splitdata[1].length()==1){
-                nation.setText("Issuing Country  : "+splitdata[1]);
+
+                nation.setText("Issuing Country  : "+codeMeans.decode(splitdata[1]));
                 lastname.setText("Lastname : "+splitdata[2]);
                 name.setText("Firstname : "+splitdata[3]);
                 passNo.setText("Passport data : "+splitdata[4]);
@@ -216,7 +224,7 @@ public class MainActivity extends AppCompatActivity {
                 String national,sptname;
                 national = splitdata[1].substring(0,3);
                 sptname = splitdata[1].substring(3,splitdata[1].length());
-                nation.setText("Issuing Country  : "+national);
+                nation.setText("Issuing Country  : "+codeMeans.decode(national));
                 lastname.setText("Lastname : "+sptname);
                 name.setText("Firstname : "+splitdata[2]);
                 passNo.setText("Passport data : "+splitdata[3]);
