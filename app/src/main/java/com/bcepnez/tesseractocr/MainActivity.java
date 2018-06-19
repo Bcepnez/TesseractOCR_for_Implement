@@ -2,7 +2,6 @@ package com.bcepnez.tesseractocr;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -12,8 +11,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -41,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
     Bitmap bitmap;
     final int RequestRuntimePermissionCode = 1;
     public static boolean crop;
-    TextView textView,type,name,lastname,passNo,chkbit,nation;
+    TextView textView,type,name,lastname,passNo,nationality,issueCountry,DOB,EXP,sex;
 
 
     @Override
@@ -61,11 +58,14 @@ public class MainActivity extends AppCompatActivity {
         manager.initAPI();
         //no err, init API ok!
         type = (TextView)findViewById(R.id.type);
+        issueCountry = (TextView)findViewById(R.id.country);
         name = (TextView)findViewById(R.id.name);
         lastname = (TextView)findViewById(R.id.lastname);
         passNo = (TextView)findViewById(R.id.PassportNo);
-        chkbit = (TextView)findViewById(R.id.checkbit);
-        nation = (TextView)findViewById(R.id.national);
+        nationality = (TextView)findViewById(R.id.nationality);
+        DOB = (TextView)findViewById(R.id.DOB);
+        sex = (TextView)findViewById(R.id.sex);
+        EXP = (TextView)findViewById(R.id.EXP);
     }
 
     private void RequestRuntimePermission() {
@@ -103,7 +103,6 @@ public class MainActivity extends AppCompatActivity {
                 }
                 crop = true;
             }
-
         }
         if (crop){
             tesseractOCR();
@@ -111,20 +110,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void tesseractOCR(){
-        ProgressDialog process = new ProgressDialog(this);
-        process.setTitle("Please wait a minute");
-        process.setMessage("Process Progress");
-        process.setCancelable(false);
-        process.show();
         String text = manager.startRecognizer(bitmap);
         imageView.setImageBitmap(bitmap);
         textView = (TextView)findViewById(R.id.text1);
         if (text.length() != 0) textView.setText(text);
         else textView.setText("No data");
-        process.dismiss();
         crop = false;
         splitter(text);
-
     }
 
     private void CropImage() {
@@ -138,7 +130,6 @@ public class MainActivity extends AppCompatActivity {
             CropIntent.putExtra("scaleDownIfNeeded",true);
             CropIntent.putExtra("data",true);
             crop = true;
-//            Toast.makeText(this,"****"+crop+"****",Toast.LENGTH_SHORT).show();
             startActivityForResult(CropIntent,CROP);
         }
         catch (ActivityNotFoundException ex){
@@ -192,10 +183,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private boolean splitter(String data){
+        String top,under;
+        String[] textFromTop;
+        TextView chktxt0 = (TextView)findViewById(R.id.checktext0);
+        TextView chktxt1 = (TextView)findViewById(R.id.checktext1);
+        String passportno,nation,dob,Sex,exp;
         if (data!=null && data.trim().toUpperCase().startsWith("P")){
             data = data.trim().toUpperCase();
-            String[] splitdata = new String[30];
-            int i=0;
             data = data.trim().toUpperCase();
             data = data.replaceAll("\\s+","");
             data = data.replaceAll("~","");
@@ -203,36 +197,47 @@ public class MainActivity extends AppCompatActivity {
             data = data.replaceAll("€","E");
             data = data.replaceAll("£","E");
             data = data.replaceAll("\\$","S");
-            data = data.replaceAll("<"," ");
-            data = data.replaceAll("\\s+"," ");
-            splitdata = data.split(" ");
-//            Toast.makeText(this,"Data : "+data+"***",Toast.LENGTH_SHORT).show();
-//            for (i = 0;i<splitdata.length;i++) {
-//                    Toast.makeText(this, "^^^Data " + i + " : " + splitdata[i] + "^^^", Toast.LENGTH_SHORT).show();
-//            }
-            CodeMeans codeMeans=new CodeMeans();
-            type.setText("Passport Type : "+splitdata[0]);
-            if (splitdata[1].length()==1){
+            top = data.substring(0,44);
+            under = data.substring(44,data.length());
+            top = top.replaceAll("<<<..*<$","");
+            top = top.replaceAll("<<","/");
+            top = top.replaceFirst("<","/");
+            top = top.replaceAll("<"," ");
 
-                nation.setText("Issuing Country  : "+codeMeans.decode(splitdata[1]));
-                lastname.setText("Lastname : "+splitdata[2]);
-                name.setText("Firstname : "+splitdata[3]);
-                passNo.setText("Passport data : "+splitdata[4]);
-                chkbit.setText("Checkbit : "+splitdata[5]);
+            chktxt0.setText("Top Data : "+top);
+            chktxt1.setText("Under Data : "+under);
+
+            textFromTop = top.split("/");
+            CodeMeans codeMeans=new CodeMeans();
+            passportno = under.substring(0,9);
+            passportno = passportno.replaceAll("<","");
+            dob = under.substring(13,19);
+            Sex = under.substring(20,21);
+            exp = under.substring(21,27);
+            type.setText("Passport Type : "+textFromTop[0]);
+            if (textFromTop[1].length()==1){
+//                nationality = under.substring(10,11);
+                nation = "D";
+                issueCountry.setText("Issuing Country  : "+codeMeans.decode(textFromTop[1]));
+                lastname.setText("Lastname : "+textFromTop[2]);
+                name.setText("Firstname : "+textFromTop[3]);
             }
             else {
-                String national,sptname;
-                national = splitdata[1].substring(0,3);
-                sptname = splitdata[1].substring(3,splitdata[1].length());
-                nation.setText("Issuing Country  : "+codeMeans.decode(national));
+                String issuingcountry,sptname;
+                issuingcountry = textFromTop[1].substring(0,3);
+                sptname = textFromTop[1].substring(3,textFromTop[1].length());
+                nation = under.substring(10,13);
+                issueCountry.setText("Issuing Country  : "+codeMeans.decode(issuingcountry));
                 lastname.setText("Lastname : "+sptname);
-                name.setText("Firstname : "+splitdata[2]);
-                passNo.setText("Passport data : "+splitdata[3]);
-                chkbit.setText("Checkbit : "+splitdata[4]);
+                name.setText("Firstname : "+textFromTop[2]);
             }
+            MakeItNumeric num = new MakeItNumeric();
 
-//            Toast.makeText(this,"Data : "+data+"***",Toast.LENGTH_SHORT).show();
-
+            passNo.setText("Passport data : "+passportno);
+            nationality.setText("Nationality : "+nation);
+            DOB.setText("Date of Birth : "+codeMeans.datecode(num.convertToNumeric(dob)));
+            EXP.setText("Expire Date : "+codeMeans.datecode(num.convertToNumeric(exp)));
+            sex.setText("Sex : "+codeMeans.sexcode(Sex));
             return true;
         }
         else {

@@ -50,7 +50,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="20dp"
-                android:id="@+id/national"
+                android:id="@+id/country"
                 />
             <TextView
                 android:layout_width="match_parent"
@@ -70,7 +70,33 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="20dp"
-                android:id="@+id/checkbit"
+                android:id="@+id/nationality"
+                />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:id="@+id/DOB"
+                />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:id="@+id/EXP"
+                />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:id="@+id/sex"
+                />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:id="@+id/checktext0"
+                />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:id="@+id/checktext1"
                 />
         </LinearLayout>
 

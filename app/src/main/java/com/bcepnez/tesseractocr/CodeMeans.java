@@ -303,7 +303,37 @@ public class CodeMeans {
             case "XCO" : return "Common Market for Eastern and Southern Africa";
             case "XEC" : return "Economic Community of West African States";
 
-            default : return "Unknown!";
+            default : return "Unknown! : "+code;
         }
+    }
+    public String sexcode(String sex){
+        if (sex.compareToIgnoreCase("F")==0){
+            return "Female";
+        }
+        else if (sex.compareToIgnoreCase("M")==0){
+            return "Male";
+        }
+        else return "No specified";
+    }
+    public String datecode(String date){
+        String year = date.substring(0,2);
+        String month = date.substring(2,4);
+        String day = date.substring(4,6);
+        switch (month){
+            case "01" : date= day.concat(" January ").concat(year); break;
+            case "02" : date= day.concat(" February ").concat(year); break;
+            case "03" : date= day.concat(" March ").concat(year); break;
+            case "04" : date= day.concat(" April ").concat(year); break;
+            case "05" : date= day.concat(" May ").concat(year); break;
+            case "06" : date= day.concat(" June ").concat(year); break;
+            case "07" : date= day.concat(" July").concat(year); break;
+            case "08" : date= day.concat(" August ").concat(year); break;
+            case "09" : date= day.concat(" September ").concat(year); break;
+            case "10" : date= day.concat(" October ").concat(year); break;
+            case "11" : date= day.concat(" November ").concat(year); break;
+            case "12" : date= day.concat(" December ").concat(year); break;
+            default: date = "Error to convert to Date!"; break;
+        }
+        return date;
     }
 }
