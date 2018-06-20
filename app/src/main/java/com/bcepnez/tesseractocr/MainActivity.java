@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
     Bitmap bitmap;
     final int RequestRuntimePermissionCode = 1;
     public static boolean crop;
-    TextView textView,type,name,lastname,passNo,nationality,issueCountry,DOB,EXP,sex;
+    TextView textView,type,name,lastname,passNo,nationality,issueCountry,DOB,EXP,sex,personalInfo;
     CodeMeans codeMeans;
 
 
@@ -67,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
         DOB = (TextView)findViewById(R.id.DOB);
         sex = (TextView)findViewById(R.id.sex);
         EXP = (TextView)findViewById(R.id.EXP);
+        personalInfo = (TextView)findViewById(R.id.personalInfo);
     }
 
     private void RequestRuntimePermission() {
@@ -206,7 +207,7 @@ public class MainActivity extends AppCompatActivity {
         String[] textFromTop;
         TextView chktxt0 = (TextView)findViewById(R.id.checktext0);
         TextView chktxt1 = (TextView)findViewById(R.id.checktext1);
-        String passportno,nation,dob,Sex,exp;
+        String passportno,nation,dob,Sex,exp,PersonInfo;
         codeMeans=new CodeMeans();
         if (data!=null && data.trim().toUpperCase().startsWith("P")){
             data = data.trim().toUpperCase();
@@ -224,9 +225,9 @@ public class MainActivity extends AppCompatActivity {
             top = top.replaceFirst("<","/");
             top = top.replaceAll("<"," ");
 
-            while (under.startsWith("<") ){
-                under = under.replaceFirst("<","");
-            }
+//            while (under.startsWith("<") ){
+//                under = under.replaceFirst("<","");
+//            }
             chktxt0.setText("Top Data : "+top);
             chktxt1.setText("Under Data : "+under);
 
@@ -237,6 +238,11 @@ public class MainActivity extends AppCompatActivity {
             dob = under.substring(13,19);
             Sex = under.substring(20,21);
             exp = under.substring(21,27);
+            PersonInfo = under.substring(28,42);
+            PersonInfo = PersonInfo.replaceAll("<","");
+            if (PersonInfo.compareToIgnoreCase("")==0){
+                PersonInfo = "-";
+            }
             type.setText("Passport Type : "+textFromTop[0]);
             if (textFromTop[1].length()==1){
 //                nationality = under.substring(10,11);
@@ -255,12 +261,14 @@ public class MainActivity extends AppCompatActivity {
                 name.setText("Firstname : "+textFromTop[2]);
             }
             MakeItNumeric num = new MakeItNumeric();
+            MakeItAlpha alp = new MakeItAlpha();
 
             passNo.setText("Passport data : "+passportno);
-            nationality.setText("Nationality : "+nation+" : "+codeMeans.decode(nation));
+            nationality.setText("Nationality : "+nation+" : "+codeMeans.decode(alp.convertToAlpha(nation)));
             DOB.setText("Date of Birth : "+codeMeans.datecode(num.convertToNumeric(dob)));
             EXP.setText("Expire Date : "+codeMeans.datecode(num.convertToNumeric(exp)));
             sex.setText("Sex : "+codeMeans.sexcode(Sex));
+            personalInfo.setText("Personal Number : "+PersonInfo);
             return true;
         }
         else {

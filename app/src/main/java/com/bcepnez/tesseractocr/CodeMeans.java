@@ -306,6 +306,307 @@ public class CodeMeans {
             default : return "Unknown! : "+code;
         }
     }
+    public String encode(String code){
+        switch (code){
+//            ---------------------A--------------------
+            case "Aruba" : return "ABW";
+            case "Afghanistan" : return "AFG";
+            case "Angola" : return "AGO";
+            case "Anguilla" : return "AIA";
+            case "Åland Islands" : return "ALA";
+            case "Albania" : return "ALB";
+            case "Andorra" : return "AND";
+            case "United Arab Emirates" : return "ARE";
+            case "Argentina" : return "ARG";
+            case "Armenia" : return "ARM";
+            case "American Samoa" : return "ASM";
+            case "Antarctica" : return "ATA";
+            case "French Southern Territories" : return "ATF";
+            case "Antigua and Barbuda" : return "ATG";
+            case "Australia" : return "AUS";
+            case "Austria" : return "AUT";
+            case "Azerbaijan" : return "AZE";
+//            ---------------------B--------------------
+            case "Burundi" : return "BDI";
+            case "Belgium" : return "BEL";
+            case "Benin" : return "BEN";
+            case "Bonaire, Saint Eustatius and Saba" : return "BES";
+            case "Burkina Faso" : return "BFA";
+            case "Bangladesh" : return "BGD";
+            case "Bulgaria" : return "BGR";
+            case "Bahrain" : return "BHR";
+            case "Bahamas" : return "BHS";
+            case "Bosnia and Herzegovina" : return "BIH";
+            case "Saint Barthélemy" : return "BLM";
+            case "Belarus" : return "BLR";
+            case "Belize" : return "BLZ";
+            case "Bermuda" : return "BMU";
+            case "Bolivia, Plurinational State of" : return "BOL";
+            case "Brazil" : return "BRA";
+            case "Barbados" : return "BRB";
+            case "Brunei Darussalam" : return "BRN";
+            case "Bhutan" : return "BTN";
+            case "Bouvet Island" : return "BVT";
+            case "Botswana" : return "BWA";
+//            ---------------------C--------------------
+            case "Central African Republic" : return "CAF";
+            case "Canada" : return "CAN";
+            case "Cocos (Keeling) Islands" : return "CCK";
+            case "Switzerland" : return "CHE";
+            case "Chile" : return "CHL";
+            case "China" : return "CHN";
+            case "Côte d'Ivoire" : return "CIV";
+            case "Cameroon" : return "CMR";
+            case "Congo, the Democratic Republic of the" : return "COD";
+            case "Congo" : return "COG";
+            case "Cook Islands" : return "COK";
+            case "Colombia" : return "COL";
+            case "Comoros" : return "COM";
+            case "Cabo Verde" : return "CPV";
+            case "Costa Rica" : return "CRI";
+            case "Cuba" : return "CUB";
+            case "Curaçao" : return "CUW";
+            case "Christmas Island" : return "CXR";
+            case "Cayman Islands" : return "CYM";
+            case "Cyprus" : return "CYP";
+            case "Czechia" : return "CZE";
+//            ---------------------D--------------------
+            case "Germany" : return "D";
+            case "Djibouti" : return "DJI";
+            case "Dominica" : return "DMA";
+            case "Denmark" : return "DNK";
+            case "Dominican Republic" : return "DOM";
+//            ---------------------E--------------------
+            case "Ecuador" : return "ECU";
+            case "Egypt" : return "EGY";
+            case "Eritrea" : return "ERI";
+            case "European Union" : return "EUE";
+            case "Western Sahara" : return "ESH";
+            case "Spain" : return "ESP";
+            case "Estonia" : return "EST";
+            case "Ethiopia" : return "ETH";
+//            ---------------------F--------------------
+            case "Finland" : return "FIN";
+            case "Fiji" : return "FJI";
+            case "Falkland Islands (Malvinas)" : return "FLK";
+            case "France" : return "FRA";
+            case "Faroe Islands" : return "FRO";
+            case "Micronesia, Federated States of" : return "FSM";
+//            ---------------------G--------------------
+            case "Gabon" : return "GAB";
+            case "United Kingdom" : return "GBR";
+            case "Georgia" : return "GEO";
+            case "Guernsey" : return "GGY";
+            case "Ghana" : return "GHA";
+            case "Gibraltar" : return "GIB";
+            case "Guinea" : return "GIN";
+            case "Guadeloupe" : return "GLP";
+            case "Gambia" : return "GMB";
+            case "Guinea-Bissau" : return "GNB";
+            case "Equatorial Guinea" : return "GNQ";
+            case "Greece" : return "GRC";
+            case "Grenada" : return "GRD";
+            case "Greenland" : return "GRL";
+            case "Guatemala" : return "GTM";
+            case "French Guiana" : return "GUF";
+            case "Guam" : return "GUM";
+            case "Guyana" : return "GUY";
+            case "British Overseas Territories Citizen " : return "GBD";
+            case "British National (Overseas)" : return "GBN";
+            case "British Overseas Citizen" : return "GBO";
+            case "British Protected Person" : return "GBP";
+            case "British Subject" : return "GBS";
+//            ---------------------H--------------------
+            case "Hong Kong" : return "HKG";
+            case "Heard Island and McDonald Islands" : return "HMD";
+            case "Honduras" : return "HND";
+            case "Croatia" : return "HRV";
+            case "Haiti" : return "HTI";
+            case "Hungary" : return "HUN";
+//            ---------------------I--------------------
+            case "Indonesia" : return "IDN";
+            case "Isle of Man" : return "IMN";
+            case "India" : return "IND";
+            case "British Indian Ocean Territory" : return "IOT";
+            case "Ireland" : return "IRL";
+            case "Iran, Islamic Republic of" : return "IRN";
+            case "Iraq" : return "IRQ";
+            case "Iceland" : return "ISL";
+            case "Israel" : return "ISR";
+            case "Italy" : return "ITA";
+//            ---------------------J--------------------
+            case "Jamaica" : return "JAM";
+            case "Jersey" : return "JEY";
+            case "Jordan" : return "JOR";
+            case "Japan" : return "JPN";
+//            ---------------------K--------------------
+            case "Kazakhstan" : return "KAZ";
+            case "Kenya" : return "KEN";
+            case "Kyrgyzstan" : return "KGZ";
+            case "Cambodia" : return "KHM";
+            case "Kiribati" : return "KIR";
+            case "Saint Kitts and Nevis" : return "KNA";
+            case "Korea, Republic of" : return "KOR";
+            case "Kuwait" : return "KWT";
+//            ---------------------L--------------------
+            case "Lao People's Democratic Republic" : return "LAO";
+            case "Lebanon" : return "LBN";
+            case "Liberia" : return "LBR";
+            case "Libya" : return "LBY";
+            case "Saint Lucia" : return "LCA";
+            case "Liechtenstein" : return "LIE";
+            case "Sri Lanka" : return "LKA";
+            case "Lesotho" : return "LSO";
+            case "Lithuania" : return "LTU";
+            case "Luxembourg" : return "LUX";
+            case "Latvia" : return "LVA";
+//            ---------------------M--------------------
+            case "Macao" : return "MAC";
+            case "Saint Martin (French part)" : return "MAF";
+            case "Morocco" : return "MAR";
+            case "Monaco" : return "MCO";
+            case "Moldova, Republic of" : return "MDA";
+            case "Madagascar" :return "MDG" ;
+            case "Maldives" : return "MDV";
+            case "Mexico" : return "MEX";
+            case "Marshall Islands" : return "MHL";
+            case "Macedonia, the former Yugoslav Republic of" : return "MKD";
+            case "Mali" : return "MLI";
+            case "Malta" :return "MLT" ;
+            case "Myanmar" : return "MMR";
+            case "Montenegro" : return "MNE";
+            case "Mongolia" : return "MNG";
+            case "Northern Mariana Islands" : return "MNP";
+            case "Mozambique" : return "MOZ";
+            case "Mauritania" : return "MRT";
+            case "Montserrat" : return "MSR";
+            case "Martinique" : return "MTQ";
+            case "Mauritius" : return "MUS";
+            case "Malawi" : return "MWI";
+            case "Malaysia" : return "MYS";
+            case "Mayotte" : return "MYT";
+//            ---------------------N--------------------
+            case "Namibia" : return "NAM";
+            case "New Caledonia" : return "NCL";
+            case "Niger" : return "NER";
+            case "Norfolk Island" : return "NFK";
+            case "Nigeria" : return "NGA";
+            case "Nicaragua" : return "NIC";
+            case "Niue" : return "NIU";
+            case "Netherlands" : return "NLD";
+            case "Norway" : return "NOR";
+            case "Nepal" : return "NPL";
+            case "Nauru" : return "NRU";
+            case "New Zealand" : return "NZL";
+//            ---------------------O--------------------
+            case "Oman" : return "OMN";
+//            ---------------------P--------------------
+            case "Pakistan" : return "PAK";
+            case "Panama" : return "PAN";
+            case "Pitcairn" : return "PCN";
+            case "Peru" : return "PER";
+            case "Philippines" : return "PHL";
+            case "Palau" : return "PLW";
+            case "Papua New Guinea" : return "PNG";
+            case "Poland" :return "POL" ;
+            case "Puerto Rico" : return "PRI";
+            case "Korea, Democratic People's Republic of" : return "PRK";
+            case "Portugal" : return "PRT";
+            case "Paraguay" : return "PRY";
+            case "Palestine, State of" : return "PSE";
+            case "French Polynesia" : return "PYF";
+//            ---------------------Q--------------------
+            case "Qatar" :return "QAT" ;
+//            ---------------------R--------------------
+            case "Réunion" : return "REU";
+            case "Romania" : return "ROU";
+            case "Russian Federation" : return "RUS";
+            case "Rwanda" : return "RWA";
+//            ---------------------S--------------------
+            case "Saudi Arabia" : return "SAU";
+            case "Sudan" : return "SDN";
+            case "Senegal" : return "SEN";
+            case "Singapore" : return "SGP";
+            case "South Georgia and the South Sandwich Islands" : return "SGS";
+            case "Saint Helena, Ascension and Tristan da Cunha" : return "SHN";
+            case "Svalbard and Jan Mayen" : return "SJM";
+            case "Solomon Islands" : return "SLB";
+            case "Sierra Leone" : return "SLE";
+            case "El Salvador" : return "SLV";
+            case "San Marino" : return "SMR";
+            case "Somalia" : return "SOM";
+            case "Saint Pierre and Miquelon" : return "SPM";
+            case "Serbia" : return "SRB";
+            case "South Sudan" : return "SSD";
+            case "Sao Tome and Principe" : return "STP";
+            case "Suriname" : return "SUR";
+            case "Slovakia" : return "SVK";
+            case "Slovenia" :return "SVN" ;
+            case "Sweden" : return "SWE";
+            case "Swaziland" : return "SWZ";
+            case "Sint Maarten (Dutch part)" : return "SXM";
+            case "Seychelles" : return "SYC";
+            case "Syrian Arab Republic" : return "SYR";
+//            ---------------------T--------------------
+            case "Turks and Caicos Islands" : return "TCA";
+            case "Chad" : return "TCD";
+            case "Togo" : return "TGO";
+            case "Thailand" : return "THA";
+            case "Tajikistan" : return "TJK";
+            case "Tokelau" : return "TKL";
+            case "Turkmenistan" : return "TKM";
+            case "Timor-Leste" : return "TLS";
+            case "Tonga" : return "TON";
+            case "Trinidad and Tobago" : return "TTO";
+            case "Tunisia" : return "TUN";
+            case "Turkey" : return "TUR";
+            case "Tuvalu" : return "TUV";
+            case "Taiwan, Province of China" : return "TWN";
+            case "Tanzania, United Republic of" : return "TZA";
+//            ---------------------U--------------------
+            case "Uganda" : return "UGA";
+            case "Ukraine" : return "UKR";
+            case "United States Minor Outlying Islands" : return "UMI";
+            case "Uruguay" : return "URY";
+            case "United States of America" : return "USA";
+            case "Uzbekistan" : return "UZB";
+//            ---------------------V--------------------
+            case "Holy See" : return "VAT";
+            case "Saint Vincent and the Grenadines" : return "VCT";
+            case "Venezuela, Bolivarian Republic of" : return "VEN";
+            case "Virgin Islands, British" : return "VGB";
+            case "Virgin Islands, U.S." : return "VIR";
+            case "Viet Nam" : return "VNM";
+            case "Vanuatu" : return "VUT";
+//            ---------------------W--------------------
+            case "Wallis and Futuna" : return "WLF";
+            case "Samoa" : return "WSM";
+//            ---------------------Y--------------------
+            case "Yemen" : return "YEM";
+//            ---------------------Z--------------------
+            case "South Africa" : return "ZAF";
+            case "Zambia" : return "ZMB";
+            case "Zimbabwe" : return "ZWE";
+//            ----------------EXTRA CODE----------------
+            case "Sovereign Military Order of Malta" : return "XOM";
+            case "Interpol travel documents" : return "XPO";
+            case "stateless person" : return "XXA";
+            case "refugee" : return "XXB";
+//            case "refugee" : return "XXC";
+            case "unspecified nationality" : return "XXX";
+            case "World Service Authority World Passport" : return "WSA";
+            case "Specialized agency of the United Nations" : return "UNA";
+            case "Resident of Kosovo to whom a travel document has been issued by the United Nations Interim Administration Mission in Kosovo (UNMIK)" : return "UNK";
+            case "United Nations Organization" : return "UNO";
+            case "African Development Bank" : return "XBA";
+            case "African Export–Import Bank" : return "XIM";
+            case "Caribbean Community or one of its emissaries" : return "XCC";
+            case "Common Market for Eastern and Southern Africa" : return "XCO";
+            case "Economic Community of West African States" : return "XEC";
+
+            default : return "Unknown! : "+code;
+        }
+    }
     public String sexcode(String sex){
         if (sex.compareToIgnoreCase("F")==0){
             return "Female";
