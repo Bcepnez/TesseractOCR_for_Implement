@@ -265,15 +265,7 @@ public class MainActivity extends AppCompatActivity {
         }
         else {
             Toast.makeText(this,"No Passport format",Toast.LENGTH_SHORT).show();
-            type.setText("Passport Type : null");
-            name.setText("Firstname : null");
-            lastname.setText("Lastname : null");
-            passNo.setText("Passport data : null");
-            nationality.setText("Nationality : null");
-            issueCountry.setText("Issuing Country  : null");
-            DOB.setText("Date of Birth : null");
-            EXP.setText("Expire Date : null");
-            sex.setText("Sex : null");
+            nodata();
             return false;
         }
     }
