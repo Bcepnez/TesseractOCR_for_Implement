@@ -326,7 +326,7 @@ public class CodeMeans {
             case "04" : date= day.concat(" April ").concat(year); break;
             case "05" : date= day.concat(" May ").concat(year); break;
             case "06" : date= day.concat(" June ").concat(year); break;
-            case "07" : date= day.concat(" July").concat(year); break;
+            case "07" : date= day.concat(" July ").concat(year); break;
             case "08" : date= day.concat(" August ").concat(year); break;
             case "09" : date= day.concat(" September ").concat(year); break;
             case "10" : date= day.concat(" October ").concat(year); break;

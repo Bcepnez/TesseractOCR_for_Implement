@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
     final int RequestRuntimePermissionCode = 1;
     public static boolean crop;
     TextView textView,type,name,lastname,passNo,nationality,issueCountry,DOB,EXP,sex;
+    CodeMeans codeMeans;
 
 
     @Override
@@ -109,14 +110,33 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
     private void tesseractOCR(){
+        Toast.makeText(this,"OCR In progress!",Toast.LENGTH_SHORT).show();
         String text = manager.startRecognizer(bitmap);
         imageView.setImageBitmap(bitmap);
         textView = (TextView)findViewById(R.id.text1);
-        if (text.length() != 0) textView.setText(text);
-        else textView.setText("No data");
+        if (text.length() != 0) {
+            textView.setText(text);
+            splitter(text);
+        }
+        else {
+            textView.setText("No data");
+            nodata();
+        }
         crop = false;
-        splitter(text);
+    }
+
+    private void nodata(){
+        type.setText("Passport Type : null");
+        name.setText("Firstname : null");
+        lastname.setText("Lastname : null");
+        passNo.setText("Passport data : null");
+        nationality.setText("Nationality : null");
+        issueCountry.setText("Issuing Country  : null");
+        DOB.setText("Date of Birth : null");
+        EXP.setText("Expire Date : null");
+        sex.setText("Sex : null");
     }
 
     private void CropImage() {
@@ -129,7 +149,6 @@ public class MainActivity extends AppCompatActivity {
             CropIntent.putExtra("scaleUpIfNeeded",true);
             CropIntent.putExtra("scaleDownIfNeeded",true);
             CropIntent.putExtra("data",true);
-            crop = true;
             startActivityForResult(CropIntent,CROP);
         }
         catch (ActivityNotFoundException ex){
@@ -188,8 +207,8 @@ public class MainActivity extends AppCompatActivity {
         TextView chktxt0 = (TextView)findViewById(R.id.checktext0);
         TextView chktxt1 = (TextView)findViewById(R.id.checktext1);
         String passportno,nation,dob,Sex,exp;
+        codeMeans=new CodeMeans();
         if (data!=null && data.trim().toUpperCase().startsWith("P")){
-            data = data.trim().toUpperCase();
             data = data.trim().toUpperCase();
             data = data.replaceAll("\\s+","");
             data = data.replaceAll("~","");
@@ -197,6 +216,7 @@ public class MainActivity extends AppCompatActivity {
             data = data.replaceAll("€","E");
             data = data.replaceAll("£","E");
             data = data.replaceAll("\\$","S");
+//            int ind = data.indexOf("<<<");
             top = data.substring(0,44);
             under = data.substring(44,data.length());
             top = top.replaceAll("<<<..*<$","");
@@ -204,11 +224,14 @@ public class MainActivity extends AppCompatActivity {
             top = top.replaceFirst("<","/");
             top = top.replaceAll("<"," ");
 
+            while (under.startsWith("<") ){
+                under = under.replaceFirst("<","");
+            }
             chktxt0.setText("Top Data : "+top);
             chktxt1.setText("Under Data : "+under);
 
             textFromTop = top.split("/");
-            CodeMeans codeMeans=new CodeMeans();
+
             passportno = under.substring(0,9);
             passportno = passportno.replaceAll("<","");
             dob = under.substring(13,19);
@@ -218,7 +241,7 @@ public class MainActivity extends AppCompatActivity {
             if (textFromTop[1].length()==1){
 //                nationality = under.substring(10,11);
                 nation = "D";
-                issueCountry.setText("Issuing Country  : "+codeMeans.decode(textFromTop[1]));
+                issueCountry.setText("Issuing Country  : "+codeMeans.decode("D"));
                 lastname.setText("Lastname : "+textFromTop[2]);
                 name.setText("Firstname : "+textFromTop[3]);
             }
@@ -234,7 +257,7 @@ public class MainActivity extends AppCompatActivity {
             MakeItNumeric num = new MakeItNumeric();
 
             passNo.setText("Passport data : "+passportno);
-            nationality.setText("Nationality : "+nation);
+            nationality.setText("Nationality : "+nation+" : "+codeMeans.decode(nation));
             DOB.setText("Date of Birth : "+codeMeans.datecode(num.convertToNumeric(dob)));
             EXP.setText("Expire Date : "+codeMeans.datecode(num.convertToNumeric(exp)));
             sex.setText("Sex : "+codeMeans.sexcode(Sex));
@@ -242,6 +265,15 @@ public class MainActivity extends AppCompatActivity {
         }
         else {
             Toast.makeText(this,"No Passport format",Toast.LENGTH_SHORT).show();
+            type.setText("Passport Type : null");
+            name.setText("Firstname : null");
+            lastname.setText("Lastname : null");
+            passNo.setText("Passport data : null");
+            nationality.setText("Nationality : null");
+            issueCountry.setText("Issuing Country  : null");
+            DOB.setText("Date of Birth : null");
+            EXP.setText("Expire Date : null");
+            sex.setText("Sex : null");
             return false;
         }
     }
