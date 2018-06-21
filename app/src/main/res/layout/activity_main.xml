@@ -30,7 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_alignParentStart="true"
-            android:text="            Welcome to OCR Generator!\n                Please Input file to OCR"
+            android:text="                            Welcome to OCR Generator!\n                                 Please Input file to OCR"
             android:textColor="@color/colorPrimary"
             />
 
