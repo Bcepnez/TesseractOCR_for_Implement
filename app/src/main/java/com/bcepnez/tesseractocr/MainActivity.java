@@ -206,9 +206,10 @@ public class MainActivity extends AppCompatActivity {
         String top,under;
         String[] textFromTop;
         TextView chktxt0 = (TextView)findViewById(R.id.checktext0);
-        TextView chktxt1 = (TextView)findViewById(R.id.checktext1);
         String passportno,nation,dob,Sex,exp,PersonInfo;
         codeMeans=new CodeMeans();
+        MakeItNumeric num = new MakeItNumeric();
+        MakeItAlpha alp = new MakeItAlpha();
         if (data!=null && data.trim().toUpperCase().startsWith("P")){
             data = data.trim().toUpperCase();
             data = data.replaceAll("\\s+","");
@@ -217,19 +218,16 @@ public class MainActivity extends AppCompatActivity {
             data = data.replaceAll("€","E");
             data = data.replaceAll("£","E");
             data = data.replaceAll("\\$","S");
-//            int ind = data.indexOf("<<<");
+            data = data.replaceAll("[^A-Z0-9<]","");
             top = data.substring(0,44);
             under = data.substring(44,data.length());
             top = top.replaceAll("<<<..*<$","");
             top = top.replaceAll("<<","/");
             top = top.replaceFirst("<","/");
             top = top.replaceAll("<"," ");
+            top = alp.convertToAlpha(top);
 
-//            while (under.startsWith("<") ){
-//                under = under.replaceFirst("<","");
-//            }
-            chktxt0.setText("Top Data : "+top);
-            chktxt1.setText("Under Data : "+under);
+            chktxt0.setText("---------------------------------------");
 
             textFromTop = top.split("/");
 
@@ -250,6 +248,13 @@ public class MainActivity extends AppCompatActivity {
                 issueCountry.setText("Issuing Country  : "+codeMeans.decode("D"));
                 lastname.setText("Lastname : "+textFromTop[2]);
                 name.setText("Firstname : "+textFromTop[3]);
+                passportno = passportno.replaceAll("O","0");
+                passportno = passportno.replaceAll("A","4");
+                passportno = passportno.replaceAll("D","0");
+                passportno = passportno.replaceAll("I","1");
+                passportno = passportno.replaceAll("Q","0");
+                passportno = passportno.replaceAll("S","5");
+                passportno = passportno.replaceAll("U","0");
             }
             else {
                 String issuingcountry,sptname;
@@ -260,11 +265,18 @@ public class MainActivity extends AppCompatActivity {
                 lastname.setText("Lastname : "+sptname);
                 name.setText("Firstname : "+textFromTop[2]);
             }
-            MakeItNumeric num = new MakeItNumeric();
-            MakeItAlpha alp = new MakeItAlpha();
 
+//            if want to adjust correctness of passport number must re process here
+            if (passNoCheckCal(passportno,num.convertToNumeric(under.substring(9,10)))){
+                Toast.makeText(this,"Correct!",Toast.LENGTH_SHORT).show();
+                passportno = temp;
+            }
+            else {
+                Toast.makeText(this,"Wrong!",Toast.LENGTH_SHORT).show();
+            }
+//            ----------------------END CHECK CORRECNESS PART----------------------
             passNo.setText("Passport data : "+passportno);
-            nationality.setText("Nationality : "+nation+" : "+codeMeans.decode(alp.convertToAlpha(nation)));
+            nationality.setText("Nationality : "+alp.convertToAlpha(nation)+" : "+codeMeans.decode(alp.convertToAlpha(nation)));
             DOB.setText("Date of Birth : "+codeMeans.datecode(num.convertToNumeric(dob)));
             EXP.setText("Expire Date : "+codeMeans.datecode(num.convertToNumeric(exp)));
             sex.setText("Sex : "+codeMeans.sexcode(Sex));
@@ -272,9 +284,41 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
         else {
-            Toast.makeText(this,"No Passport format",Toast.LENGTH_SHORT).show();
+            Toast.makeText(this,"Passport format not found",Toast.LENGTH_SHORT).show();
             nodata();
             return false;
         }
+    }
+    String temp;
+
+    private boolean passNoCheckCal(String data,String chk){
+        MakeItNumeric num = new MakeItNumeric();
+        MakeItAlpha alpha = new MakeItAlpha();
+        chk =num.convertToNumeric(chk);
+        char[] text;
+        int val;
+        int checkbit = num.toint(chk);
+        int sum = 0,factor;
+//        String prefix,no;
+//        prefix = passNo.substring(0,2);
+//        prefix = alpha.convertToAlpha(prefix);
+//        no = passNo.substring(2);
+//        no = num.convertToNumeric(no);
+//        passNo = prefix.concat(no);
+//        Toast.makeText(this,prefix+" : "+no+"--> : "+passNo,Toast.LENGTH_SHORT).show();
+        text = data.toCharArray();
+        for (int i = 0 ; i < data.length(); i++) {
+            val = num.convertForCalculate(text[i]);
+            if ( i%3 == 0 ) factor = 7;
+            else if ( i%3 == 1 ) factor = 3;
+            else factor = 1;
+            sum+=(val*factor);
+//            Toast.makeText(this,"-----"+i+" : "+text[i]+"-----\nreturn val: "+val+"\nfactor: "+factor+"\n-----sum: "+sum+"-----",Toast.LENGTH_SHORT).show();
+        }
+        temp=data;
+        if (sum%10 == checkbit) {
+            return true;
+        }
+        else return false;
     }
 }

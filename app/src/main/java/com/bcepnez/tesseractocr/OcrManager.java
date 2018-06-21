@@ -14,7 +14,7 @@ public class OcrManager {
         baseAPI = new TessBaseAPI();
 
         String dataPath = MainApplication.instance.getTessDataParentDirectory();
-        baseAPI.init(dataPath,"eng");
+        baseAPI.init(dataPath,"ocrb");
 //        first param = datapath to trained data,
 //        second = language code
 

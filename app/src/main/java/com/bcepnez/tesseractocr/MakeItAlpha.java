@@ -10,9 +10,12 @@ public class MakeItAlpha {
         data = data.replaceAll("1","I");
         data = data.replaceAll("0","O");
         data = data.replaceAll("4","A");
+        data = data.replaceAll("6","G");
         data = data.replaceAll("€","E");
         data = data.replaceAll("£","E");
-//        data = data.replaceAll("G","6");
+        data = data.replaceAll("8","E");
+        data = data.replaceAll("5","S");
+        data = data.replaceAll("6","G");
         return data;
     }
 }

@@ -16,7 +16,7 @@ import java.io.OutputStream;
 public class MainApplication extends Application {
 
     public static MainApplication instance = null;
-    String type = "eng.traineddata";
+    String type = "ocrb.traineddata";
     @Override
     public void onCreate() {
         super.onCreate();

@@ -32,7 +32,7 @@
             android:layout_alignParentStart="true"
             android:text="            Welcome to OCR Generator!\n                Please Input file to OCR"
             android:textColor="@color/colorPrimary"
-            android:textSize="20dp" />
+            />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -43,64 +43,70 @@
             android:layout_above="@+id/text1">
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="20dp"
+                android:layout_height="wrap_content"
                 android:id="@+id/type"
+                android:textSize="20dp"
                 />
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="20dp"
+                android:layout_height="wrap_content"
                 android:id="@+id/country"
+                android:textSize="20dp"
                 />
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="20dp"
+                android:layout_height="wrap_content"
                 android:id="@+id/name"
+                android:textSize="20dp"
                 />
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="20dp"
+                android:layout_height="wrap_content"
                 android:id="@+id/lastname"
+                android:textSize="20dp"
                 />
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="20dp"
+                android:layout_height="wrap_content"
                 android:id="@+id/PassportNo"
+                android:textSize="20dp"
                 />
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="20dp"
+                android:layout_height="wrap_content"
                 android:id="@+id/nationality"
+                android:textSize="20dp"
                 />
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="20dp"
+                android:layout_height="wrap_content"
                 android:id="@+id/DOB"
+                android:textSize="20dp"
                 />
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="20dp"
+                android:layout_height="wrap_content"
                 android:id="@+id/EXP"
+                android:textSize="20dp"
                 />
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="20dp"
+                android:layout_height="wrap_content"
                 android:id="@+id/sex"
+                android:textSize="20dp"
                 />
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="20dp"
+                android:layout_height="wrap_content"
                 android:id="@+id/personalInfo"
+                android:textSize="20dp"
                 />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="20dp"
                 android:id="@+id/checktext0"
-                />
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="20dp"
-                android:id="@+id/checktext1"
+                android:textAlignment="center"
                 />
         </LinearLayout>
 
