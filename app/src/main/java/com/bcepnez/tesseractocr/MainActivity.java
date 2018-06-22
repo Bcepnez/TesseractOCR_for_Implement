@@ -111,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 if (bitmap.getHeight()>bitmap.getWidth()){
                     Toast.makeText(this, "!!!!Rotate!!!!", Toast.LENGTH_SHORT).show();
-                    rotate(-90);
+                    bitmap = rotate(bitmap,-90);
                 }
                 crop = true;
             }
@@ -121,14 +121,13 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void rotate(int degree){
+    private Bitmap rotate(Bitmap bitmap1,int degree){
 //        - => rotate anti-clockwise
 //        + => rotate clockwise
         Matrix matrix = new Matrix();
         matrix.postRotate(degree);
-        Bitmap bmp = Bitmap.createScaledBitmap(bitmap,bitmap.getWidth(),bitmap.getHeight(),true);
-        bitmap = Bitmap.createBitmap(bitmap,0,0,bitmap.getWidth(),bitmap.getHeight(),matrix,true);
-
+        bitmap1 = Bitmap.createBitmap(bitmap1,0,0,bitmap1.getWidth(),bitmap1.getHeight(),matrix,true);
+        return bitmap1;
     }
 
     private void tesseractOCR(){
@@ -166,8 +165,12 @@ public class MainActivity extends AppCompatActivity {
             CropIntent = new Intent("com.android.camera.action.CROP");
             CropIntent.setDataAndType(uri,"image/*");
             CropIntent.putExtra("crop","true");
+            
+//            crop on landscap mode
 //            CropIntent.putExtra("aspectX",7);
 //            CropIntent.putExtra("aspectY",1);
+
+//            crop on potrait mode
             CropIntent.putExtra("aspectX",1);
             CropIntent.putExtra("aspectY",7);
             CropIntent.putExtra("scaleUpIfNeeded",true);
