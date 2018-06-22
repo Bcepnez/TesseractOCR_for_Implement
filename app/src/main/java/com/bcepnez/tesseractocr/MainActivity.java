@@ -9,6 +9,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
@@ -108,6 +109,10 @@ public class MainActivity extends AppCompatActivity {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+                if (bitmap.getHeight()>bitmap.getWidth()){
+                    Toast.makeText(this, "!!!!Rotate!!!!", Toast.LENGTH_SHORT).show();
+                    rotate(-90);
+                }
                 crop = true;
             }
         }
@@ -116,6 +121,15 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void rotate(int degree){
+//        - => rotate anti-clockwise
+//        + => rotate clockwise
+        Matrix matrix = new Matrix();
+        matrix.postRotate(degree);
+        Bitmap bmp = Bitmap.createScaledBitmap(bitmap,bitmap.getWidth(),bitmap.getHeight(),true);
+        bitmap = Bitmap.createBitmap(bitmap,0,0,bitmap.getWidth(),bitmap.getHeight(),matrix,true);
+
+    }
 
     private void tesseractOCR(){
         Toast.makeText(this,"OCR In progress!",Toast.LENGTH_SHORT).show();
@@ -152,8 +166,10 @@ public class MainActivity extends AppCompatActivity {
             CropIntent = new Intent("com.android.camera.action.CROP");
             CropIntent.setDataAndType(uri,"image/*");
             CropIntent.putExtra("crop","true");
-            CropIntent.putExtra("aspectX",7);
-            CropIntent.putExtra("aspectY",1);
+//            CropIntent.putExtra("aspectX",7);
+//            CropIntent.putExtra("aspectY",1);
+            CropIntent.putExtra("aspectX",1);
+            CropIntent.putExtra("aspectY",7);
             CropIntent.putExtra("scaleUpIfNeeded",true);
             CropIntent.putExtra("scaleDownIfNeeded",true);
             CropIntent.putExtra("data",true);
@@ -239,7 +255,7 @@ public class MainActivity extends AppCompatActivity {
 //                convert all top part to alpha
                 top = alp.convertToAlpha(top);
 
-                chktxt0.setText("---------------------------------------");
+//                chktxt0.setText("---------------------------------------");
 
                 textFromTop = top.split("/");
 
@@ -299,17 +315,15 @@ public class MainActivity extends AppCompatActivity {
                 EXP.setText("Expire Date : " + codeMeans.datecode(num.convertToNumeric(exp)));
                 sex.setText("Sex : " + codeMeans.sexcode(Sex));
                 personalInfo.setText("Personal Number : " + PersonInfo);
+                chktxt0.setText("---------------------------------------");
                 return true;
             }
+        }else{
+            Toast.makeText(this, "Passport format not found", Toast.LENGTH_SHORT).show();
+            nodata("null");
+            return false;
         }
-        else{
-                Toast.makeText(this, "Passport format not found", Toast.LENGTH_SHORT).show();
-                nodata("null");
-                return false;
-            }
-
     }
-
 
     private boolean passNoCheckCal(String data,String chk){
         MakeItNumeric num = new MakeItNumeric();
