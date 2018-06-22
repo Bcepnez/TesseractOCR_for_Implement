@@ -6,6 +6,10 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
+import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -29,7 +33,6 @@ public class MainActivity extends AppCompatActivity {
     private static int RESULT_LOAD_IMAGE = 1;
     private static final int CAMERA_REQUEST = 1888;
     private static final int CROP = 2;
-    String TAG = "Main Activity";
     Intent CamIntent,GalIntent,CropIntent;
     Toolbar toolbar;
     File file;
@@ -40,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
     public static boolean crop;
     TextView textView,type,name,lastname,passNo,nationality,issueCountry,DOB,EXP,sex,personalInfo;
     CodeMeans codeMeans;
+    String temp;
 
 
     @Override
@@ -82,6 +86,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK && !crop ){
+//            Insert rotate method
             if (!crop){ CropImage(); }
         }
         else if (requestCode == RESULT_LOAD_IMAGE && resultCode == Activity.RESULT_OK  && !crop ) {
@@ -114,7 +119,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void tesseractOCR(){
         Toast.makeText(this,"OCR In progress!",Toast.LENGTH_SHORT).show();
+        bitmap = toGrayscale(bitmap);
         String text = manager.startRecognizer(bitmap);
+
         imageView.setImageBitmap(bitmap);
         textView = (TextView)findViewById(R.id.text1);
         if (text.length() != 0) {
@@ -123,21 +130,21 @@ public class MainActivity extends AppCompatActivity {
         }
         else {
             textView.setText("No data");
-            nodata();
+            nodata("null");
         }
         crop = false;
     }
 
-    private void nodata(){
-        type.setText("Passport Type : null");
-        name.setText("Firstname : null");
-        lastname.setText("Lastname : null");
-        passNo.setText("Passport data : null");
-        nationality.setText("Nationality : null");
-        issueCountry.setText("Issuing Country  : null");
-        DOB.setText("Date of Birth : null");
-        EXP.setText("Expire Date : null");
-        sex.setText("Sex : null");
+    private void nodata(String text){
+        type.setText("Passport Type : "+text);
+        name.setText("Firstname : "+text);
+        lastname.setText("Lastname : "+text);
+        passNo.setText("Passport data : "+text);
+        nationality.setText("Nationality : "+text);
+        issueCountry.setText("Issuing Country  : "+text);
+        DOB.setText("Date of Birth : "+text);
+        EXP.setText("Expire Date : "+text);
+        sex.setText("Sex : "+text);
     }
 
     private void CropImage() {
@@ -210,86 +217,99 @@ public class MainActivity extends AppCompatActivity {
         codeMeans=new CodeMeans();
         MakeItNumeric num = new MakeItNumeric();
         MakeItAlpha alp = new MakeItAlpha();
-        if (data!=null && data.trim().toUpperCase().startsWith("P")){
+        if (data!=null && data.trim().toUpperCase().startsWith("P")) {
             data = data.trim().toUpperCase();
-            data = data.replaceAll("\\s+","");
-            data = data.replaceAll("~","");
-            data = data.replaceAll("\\(","<");
-            data = data.replaceAll("€","E");
-            data = data.replaceAll("£","E");
-            data = data.replaceAll("\\$","S");
-            data = data.replaceAll("[^A-Z0-9<]","");
-            top = data.substring(0,44);
-            under = data.substring(44,data.length());
-            top = top.replaceAll("<<<..*<$","");
-            top = top.replaceAll("<<","/");
-            top = top.replaceFirst("<","/");
-            top = top.replaceAll("<"," ");
-            top = alp.convertToAlpha(top);
+            data = data.replaceAll("\\s+", "");
+            data = data.replaceAll("~", "");
+            data = data.replaceAll("\\(", "<");
+            data = data.replaceAll("€", "E");
+            data = data.replaceAll("£", "E");
+            data = data.replaceAll("\\$", "S");
+            data = data.replaceAll("[^A-Z0-9<]", "");
+            if (data.length() < 88) {
+                nodata("recheck camera lens");
+                return false;
+            } else {
+                top = data.substring(0, 44);
+                under = data.substring(44, data.length());
+                top = top.replaceAll("<<<..*<$", "");
+                top = top.replaceAll("<<", "/");
+                top = top.replaceFirst("<", "/");
+                top = top.replaceAll("<", " ");
+//                convert all top part to alpha
+                top = alp.convertToAlpha(top);
 
-            chktxt0.setText("---------------------------------------");
+                chktxt0.setText("---------------------------------------");
 
-            textFromTop = top.split("/");
+                textFromTop = top.split("/");
 
-            passportno = under.substring(0,9);
-            passportno = passportno.replaceAll("<","");
-            dob = under.substring(13,19);
-            Sex = under.substring(20,21);
-            exp = under.substring(21,27);
-            PersonInfo = under.substring(28,42);
-            PersonInfo = PersonInfo.replaceAll("<","");
-            if (PersonInfo.compareToIgnoreCase("")==0){
-                PersonInfo = "-";
-            }
-            type.setText("Passport Type : "+textFromTop[0]);
-            if (textFromTop[1].length()==1){
+                passportno = under.substring(0, 9);
+                passportno = passportno.replaceAll("<", "");
+                dob = under.substring(13, 19);
+                Sex = under.substring(20, 21);
+                exp = under.substring(21, 27);
+                PersonInfo = under.substring(28, 42);
+                PersonInfo = PersonInfo.replaceAll("<", "");
+                if (PersonInfo.compareToIgnoreCase("") == 0) {
+                    PersonInfo = "-";
+                }
+                type.setText("Passport Type : " + textFromTop[0]);
+                if (textFromTop[1].length() == 1) {
 //                nationality = under.substring(10,11);
-                nation = "D";
-                issueCountry.setText("Issuing Country  : "+codeMeans.decode("D"));
-                lastname.setText("Lastname : "+textFromTop[2]);
-                name.setText("Firstname : "+textFromTop[3]);
-                passportno = passportno.replaceAll("O","0");
-                passportno = passportno.replaceAll("A","4");
-                passportno = passportno.replaceAll("D","0");
-                passportno = passportno.replaceAll("I","1");
-                passportno = passportno.replaceAll("Q","0");
-                passportno = passportno.replaceAll("S","5");
-                passportno = passportno.replaceAll("U","0");
-            }
-            else {
-                String issuingcountry,sptname;
-                issuingcountry = textFromTop[1].substring(0,3);
-                sptname = textFromTop[1].substring(3,textFromTop[1].length());
-                nation = under.substring(10,13);
-                issueCountry.setText("Issuing Country  : "+codeMeans.decode(issuingcountry));
-                lastname.setText("Lastname : "+sptname);
-                name.setText("Firstname : "+textFromTop[2]);
-            }
+                    nation = "D";
+                    issueCountry.setText("Issuing Country  : " + codeMeans.decode("D"));
+                    lastname.setText("Lastname : " + textFromTop[2]);
+                    name.setText("Firstname : " + textFromTop[3]);
+                    passportno = passportno.replaceAll("O", "0");
+                    passportno = passportno.replaceAll("A", "4");
+                    passportno = passportno.replaceAll("D", "0");
+                    passportno = passportno.replaceAll("I", "1");
+                    passportno = passportno.replaceAll("Q", "0");
+                    passportno = passportno.replaceAll("S", "5");
+                    passportno = passportno.replaceAll("U", "0");
+                } else {
+                    String issuingcountry, sptname;
+                    issuingcountry = textFromTop[1].substring(0, 3);
+                    sptname = textFromTop[1].substring(3, textFromTop[1].length());
+                    nation = under.substring(10, 13);
+                    issueCountry.setText("Issuing Country  : " + codeMeans.decode(issuingcountry));
+                    lastname.setText("Lastname : " + sptname);
+                    name.setText("Firstname : " + textFromTop[2]);
+                }
 
 //            if want to adjust correctness of passport number must re process here
-            if (passNoCheckCal(passportno,num.convertToNumeric(under.substring(9,10)))){
-                Toast.makeText(this,"Correct!",Toast.LENGTH_SHORT).show();
-                passportno = temp;
-            }
-            else {
-                Toast.makeText(this,"Wrong!",Toast.LENGTH_SHORT).show();
-            }
+                if (passNoCheckCal(passportno, num.convertToNumeric(under.substring(9, 10)))) {
+                    Toast.makeText(this, "Passport Number Correct!", Toast.LENGTH_SHORT).show();
+                    passportno = temp;
+                } else {
+//                    Toast.makeText(this, "Passport Number Wrong!", Toast.LENGTH_SHORT).show();
+                    passportno = passportno.replaceAll("O","0");
+                    if (passNoCheckCal(passportno, num.convertToNumeric(under.substring(9, 10)))) {
+                        Toast.makeText(this, "Passport Number 2 Correct!", Toast.LENGTH_SHORT).show();
+                        passportno = temp;
+                    }
+                    else {
+                        Toast.makeText(this, "Passport Number Wrong!", Toast.LENGTH_SHORT).show();
+                    }
+                }
 //            ----------------------END CHECK CORRECNESS PART----------------------
-            passNo.setText("Passport data : "+passportno);
-            nationality.setText("Nationality : "+alp.convertToAlpha(nation)+" : "+codeMeans.decode(alp.convertToAlpha(nation)));
-            DOB.setText("Date of Birth : "+codeMeans.datecode(num.convertToNumeric(dob)));
-            EXP.setText("Expire Date : "+codeMeans.datecode(num.convertToNumeric(exp)));
-            sex.setText("Sex : "+codeMeans.sexcode(Sex));
-            personalInfo.setText("Personal Number : "+PersonInfo);
-            return true;
+                passNo.setText("Passport data : " + passportno);
+                nationality.setText("Nationality : " + alp.convertToAlpha(nation) + " : " + codeMeans.decode(alp.convertToAlpha(nation)));
+                DOB.setText("Date of Birth : " + codeMeans.datecode(num.convertToNumeric(dob)));
+                EXP.setText("Expire Date : " + codeMeans.datecode(num.convertToNumeric(exp)));
+                sex.setText("Sex : " + codeMeans.sexcode(Sex));
+                personalInfo.setText("Personal Number : " + PersonInfo);
+                return true;
+            }
         }
-        else {
-            Toast.makeText(this,"Passport format not found",Toast.LENGTH_SHORT).show();
-            nodata();
-            return false;
-        }
+        else{
+                Toast.makeText(this, "Passport format not found", Toast.LENGTH_SHORT).show();
+                nodata("null");
+                return false;
+            }
+
     }
-    String temp;
+
 
     private boolean passNoCheckCal(String data,String chk){
         MakeItNumeric num = new MakeItNumeric();
@@ -299,13 +319,6 @@ public class MainActivity extends AppCompatActivity {
         int val;
         int checkbit = num.toint(chk);
         int sum = 0,factor;
-//        String prefix,no;
-//        prefix = passNo.substring(0,2);
-//        prefix = alpha.convertToAlpha(prefix);
-//        no = passNo.substring(2);
-//        no = num.convertToNumeric(no);
-//        passNo = prefix.concat(no);
-//        Toast.makeText(this,prefix+" : "+no+"--> : "+passNo,Toast.LENGTH_SHORT).show();
         text = data.toCharArray();
         for (int i = 0 ; i < data.length(); i++) {
             val = num.convertForCalculate(text[i]);
@@ -320,5 +333,21 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
         else return false;
+    }
+
+    private Bitmap toGrayscale(Bitmap bitmapOriginal){
+        int width,height;
+        height = bitmapOriginal.getHeight();
+        width = bitmapOriginal.getWidth();
+
+        Bitmap newBitmap = Bitmap.createBitmap(width,height,Bitmap.Config.ARGB_8888);
+        Canvas c =new Canvas(newBitmap);
+        Paint paint = new Paint();
+        ColorMatrix colorMatrix = new ColorMatrix();
+        colorMatrix.setSaturation(0);
+        ColorMatrixColorFilter colorMatrixColorFilter = new ColorMatrixColorFilter(colorMatrix);
+        paint.setColorFilter(colorMatrixColorFilter);
+        c.drawBitmap(bitmapOriginal,0,0,paint);
+        return newBitmap;
     }
 }
