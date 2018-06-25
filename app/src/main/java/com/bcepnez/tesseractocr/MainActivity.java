@@ -22,7 +22,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,7 +49,8 @@ public class MainActivity extends AppCompatActivity {
     TextView textView,type,name,lastname,passNo,nationality,issueCountry,DOB,EXP,sex,personalInfo;
     CodeMeans codeMeans;
     String temp;
-
+    ImageView imageView1;
+    LinearLayout linearLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         imageView = (ImageView)findViewById(R.id.imgView);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("Image to Text Converter");
+        toolbar.setTitle("Image to Text");
         setSupportActionBar(toolbar);
         int camPermission = ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CAMERA);
         if (camPermission == PackageManager.PERMISSION_DENIED){
@@ -73,6 +78,11 @@ public class MainActivity extends AppCompatActivity {
         sex = (TextView)findViewById(R.id.sex);
         EXP = (TextView)findViewById(R.id.EXP);
         personalInfo = (TextView)findViewById(R.id.personalInfo);
+        textView = (TextView)findViewById(R.id.text1);
+        imageView1 = (ImageView)findViewById(R.id.logo);
+        linearLayout = (LinearLayout) findViewById(R.id.linearLayout);
+        home();
+
     }
 
     private void RequestRuntimePermission() {
@@ -110,14 +120,16 @@ public class MainActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
                 if (bitmap.getHeight()>bitmap.getWidth()){
-                    Toast.makeText(this, "!!!!Rotate!!!!", Toast.LENGTH_SHORT).show();
-                    bitmap = rotate(bitmap,-90);
+                    bitmap = rotate(bitmap,90);
                 }
                 crop = true;
             }
         }
         if (crop){
             tesseractOCR();
+            imageView.setVisibility(View.VISIBLE);
+            imageView1.setVisibility(View.INVISIBLE);
+            linearLayout.setVisibility(View.VISIBLE);
         }
     }
 
@@ -136,7 +148,6 @@ public class MainActivity extends AppCompatActivity {
         String text = manager.startRecognizer(bitmap);
 
         imageView.setImageBitmap(bitmap);
-        textView = (TextView)findViewById(R.id.text1);
         if (text.length() != 0) {
             textView.setText(text);
             splitter(text);
@@ -165,7 +176,7 @@ public class MainActivity extends AppCompatActivity {
             CropIntent = new Intent("com.android.camera.action.CROP");
             CropIntent.setDataAndType(uri,"image/*");
             CropIntent.putExtra("crop","true");
-            
+
 //            crop on landscap mode
 //            CropIntent.putExtra("aspectX",7);
 //            CropIntent.putExtra("aspectY",1);
@@ -197,7 +208,17 @@ public class MainActivity extends AppCompatActivity {
         } else if (item.getItemId() == R.id.btn_gallery) {
             openGallery();
         }
+        else if (item.getItemId() == R.id.btn_home){
+            home();
+        }
         return true;
+    }
+
+    private void home() {
+        imageView1.setVisibility(View.VISIBLE);
+        imageView.setVisibility(View.INVISIBLE);
+        linearLayout.setVisibility(View.INVISIBLE);
+        textView.setText("                            Welcome to OCR Generator!\n                                 Please Input file to OCR");
     }
 
     private void openGallery() {
@@ -246,7 +267,7 @@ public class MainActivity extends AppCompatActivity {
             data = data.replaceAll("\\$", "S");
             data = data.replaceAll("[^A-Z0-9<]", "");
             if (data.length() < 88) {
-                nodata("recheck camera lens");
+                nodata("no data");
                 return false;
             } else {
                 top = data.substring(0, 44);
@@ -304,7 +325,7 @@ public class MainActivity extends AppCompatActivity {
 //                    Toast.makeText(this, "Passport Number Wrong!", Toast.LENGTH_SHORT).show();
                     passportno = passportno.replaceAll("O","0");
                     if (passNoCheckCal(passportno, num.convertToNumeric(under.substring(9, 10)))) {
-                        Toast.makeText(this, "Passport Number 2 Correct!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Passport Number Correct!", Toast.LENGTH_SHORT).show();
                         passportno = temp;
                     }
                     else {

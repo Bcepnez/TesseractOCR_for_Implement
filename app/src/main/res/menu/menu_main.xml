@@ -4,6 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.bcepnez.tesseractocr.MainActivity"
     >
+    <item
+        android:id="@+id/btn_home"
+        android:icon="@drawable/ic_home"
+        android:title="Home"
+        app1:showAsAction="always" />
     <item android:id="@+id/btn_camera"
             android:icon="@drawable/ic_camera"
             android:title="Camera"
