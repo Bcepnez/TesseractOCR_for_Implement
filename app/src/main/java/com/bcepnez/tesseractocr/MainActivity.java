@@ -99,18 +99,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK && !crop ){
-//            if (data!=null && data.getExtras()!=null){
-//                bitmap = (Bitmap) data.getExtras().getParcelable("data");
-//                Toast.makeText(this, "get data!", Toast.LENGTH_SHORT).show();
-//                int x = bitmap.getWidth();
-//                int y = bitmap.getHeight();
-//                Toast.makeText(this, "x : "+x, Toast.LENGTH_SHORT).show();
-//                Toast.makeText(this, "y : "+y, Toast.LENGTH_SHORT).show();
-////                test = Bitmap.createBitmap(bitmap, x-30,y-210,304,2126);
-////                test = rotate(test,90);
-////                tester.setImageBitmap(test);
-//                crop=true;
-//            }
             if (!crop){ CropImage(); }
         }
         else if (requestCode == RESULT_LOAD_IMAGE && resultCode == Activity.RESULT_OK  && !crop ) {
@@ -135,12 +123,11 @@ public class MainActivity extends AppCompatActivity {
                 if (bitmap.getHeight()>bitmap.getWidth()){
                     bitmap = rotate(bitmap,90);
                 }
-
                 crop = true;
             }
         }
         if (crop){
-            tesseractOCR();
+            String text =tesseractOCR();
             imageView.setVisibility(View.VISIBLE);
             imageView1.setVisibility(View.INVISIBLE);
             linearLayout.setVisibility(View.VISIBLE);
@@ -156,7 +143,7 @@ public class MainActivity extends AppCompatActivity {
         return bitmap1;
     }
 
-    private void tesseractOCR(){
+    private String tesseractOCR(){
         Toast.makeText(this,"OCR In progress!",Toast.LENGTH_SHORT).show();
         bitmap = toGrayscale(bitmap);
         String text = manager.startRecognizer(bitmap);
@@ -170,6 +157,7 @@ public class MainActivity extends AppCompatActivity {
             nodata("null");
         }
         crop = false;
+        return text;
     }
 
     private void nodata(String text){
@@ -265,11 +253,10 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    String passportno,nation,dob,Sex,exp,PersonInfo,Name,lastName,issueC;
     private boolean splitter(String data){
         String top,under;
         String[] textFromTop;
-        TextView chktxt0 = (TextView)findViewById(R.id.checktext0);
-        String passportno,nation,dob,Sex,exp,PersonInfo;
         codeMeans=new CodeMeans();
         MakeItNumeric num = new MakeItNumeric();
         MakeItAlpha alp = new MakeItAlpha();
@@ -312,10 +299,13 @@ public class MainActivity extends AppCompatActivity {
                 type.setText("Passport Type : " + textFromTop[0]);
                 if (textFromTop[1].length() == 1) {
 //                nationality = under.substring(10,11);
+//                    issueCountry.setText("Issuing Country  : " + codeMeans.decode("D"));
+//                    lastname.setText("Lastname : " + textFromTop[2]);
+//                    name.setText("Firstname : " + textFromTop[3]);
                     nation = "D";
-                    issueCountry.setText("Issuing Country  : " + codeMeans.decode("D"));
-                    lastname.setText("Lastname : " + textFromTop[2]);
-                    name.setText("Firstname : " + textFromTop[3]);
+                    issueC = "D";
+                    lastName = textFromTop[2];
+                    Name = textFromTop[3];
                     passportno = passportno.replaceAll("O", "0");
                     passportno = passportno.replaceAll("A", "4");
                     passportno = passportno.replaceAll("D", "0");
@@ -324,13 +314,10 @@ public class MainActivity extends AppCompatActivity {
                     passportno = passportno.replaceAll("S", "5");
                     passportno = passportno.replaceAll("U", "0");
                 } else {
-                    String issuingcountry, sptname;
-                    issuingcountry = textFromTop[1].substring(0, 3);
-                    sptname = textFromTop[1].substring(3, textFromTop[1].length());
+                    issueC = textFromTop[1].substring(0, 3);
+                    lastName = textFromTop[1].substring(3, textFromTop[1].length());
                     nation = under.substring(10, 13);
-                    issueCountry.setText("Issuing Country  : " + codeMeans.decode(issuingcountry));
-                    lastname.setText("Lastname : " + sptname);
-                    name.setText("Firstname : " + textFromTop[2]);
+                    Name = textFromTop[2];
                 }
 
 //            if want to adjust correctness of passport number must re process here
@@ -338,7 +325,6 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(this, "Passport Number Correct!", Toast.LENGTH_SHORT).show();
                     passportno = temp;
                 } else {
-//                    Toast.makeText(this, "Passport Number Wrong!", Toast.LENGTH_SHORT).show();
                     passportno = passportno.replaceAll("O","0");
                     if (passNoCheckCal(passportno, num.convertToNumeric(under.substring(9, 10)))) {
                         Toast.makeText(this, "Passport Number Correct!", Toast.LENGTH_SHORT).show();
@@ -349,13 +335,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
 //            ----------------------END CHECK CORRECNESS PART----------------------
-                passNo.setText("Passport data : " + passportno);
-                nationality.setText("Nationality : " + alp.convertToAlpha(nation) + " : " + codeMeans.decode(alp.convertToAlpha(nation)));
-                DOB.setText("Date of Birth : " + codeMeans.datecode(num.convertToNumeric(dob)));
-                EXP.setText("Expire Date : " + codeMeans.datecode(num.convertToNumeric(exp)));
-                sex.setText("Sex : " + codeMeans.sexcode(Sex));
-                personalInfo.setText("Personal Number : " + PersonInfo);
-                chktxt0.setText("---------------------------------------");
+                setTextTotextView();
                 return true;
             }
         }else{
@@ -363,6 +343,21 @@ public class MainActivity extends AppCompatActivity {
             nodata("null");
             return false;
         }
+    }
+    private void setTextTotextView (){
+        TextView chktxt0 = (TextView)findViewById(R.id.checktext0);
+        MakeItAlpha alp = new MakeItAlpha();
+        MakeItNumeric num = new MakeItNumeric();
+        issueCountry.setText("Issuing Country  : " + codeMeans.decode(issueC));
+        lastname.setText("Lastname : " + lastName);
+        name.setText("Firstname : " + Name);
+        passNo.setText("Passport data : " + passportno);
+        nationality.setText("Nationality : " + alp.convertToAlpha(nation) + " : " + codeMeans.decode(alp.convertToAlpha(nation)));
+        DOB.setText("Date of Birth : " + codeMeans.datecode(num.convertToNumeric(dob)));
+        EXP.setText("Expire Date : " + codeMeans.datecode(num.convertToNumeric(exp)));
+        sex.setText("Sex : " + codeMeans.sexcode(Sex));
+        personalInfo.setText("Personal Number : " + PersonInfo);
+        chktxt0.setText("---------------------------------------");
     }
 
     private boolean passNoCheckCal(String data,String chk){
