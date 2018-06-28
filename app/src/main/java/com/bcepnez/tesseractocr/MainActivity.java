@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
     TextView textView,type,name,lastname,passNo,nationality,issueCountry,DOB,EXP,sex,personalInfo;
     CodeMeans codeMeans;
     String temp;
-    ImageView imageView1;
+    ImageView imageView1,tester;
     LinearLayout linearLayout;
 
     @Override
@@ -57,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         imageView = (ImageView)findViewById(R.id.imgView);
+        tester = (ImageView)findViewById(R.id.test);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("Image to Text");
         setSupportActionBar(toolbar);
@@ -94,10 +95,22 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    Bitmap test;
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK && !crop ){
-//            Insert rotate method
+//            if (data!=null && data.getExtras()!=null){
+//                bitmap = (Bitmap) data.getExtras().getParcelable("data");
+//                Toast.makeText(this, "get data!", Toast.LENGTH_SHORT).show();
+//                int x = bitmap.getWidth();
+//                int y = bitmap.getHeight();
+//                Toast.makeText(this, "x : "+x, Toast.LENGTH_SHORT).show();
+//                Toast.makeText(this, "y : "+y, Toast.LENGTH_SHORT).show();
+////                test = Bitmap.createBitmap(bitmap, x-30,y-210,304,2126);
+////                test = rotate(test,90);
+////                tester.setImageBitmap(test);
+//                crop=true;
+//            }
             if (!crop){ CropImage(); }
         }
         else if (requestCode == RESULT_LOAD_IMAGE && resultCode == Activity.RESULT_OK  && !crop ) {
@@ -122,6 +135,7 @@ public class MainActivity extends AppCompatActivity {
                 if (bitmap.getHeight()>bitmap.getWidth()){
                     bitmap = rotate(bitmap,90);
                 }
+
                 crop = true;
             }
         }
@@ -146,7 +160,6 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(this,"OCR In progress!",Toast.LENGTH_SHORT).show();
         bitmap = toGrayscale(bitmap);
         String text = manager.startRecognizer(bitmap);
-
         imageView.setImageBitmap(bitmap);
         if (text.length() != 0) {
             textView.setText(text);
@@ -169,6 +182,7 @@ public class MainActivity extends AppCompatActivity {
         DOB.setText("Date of Birth : "+text);
         EXP.setText("Expire Date : "+text);
         sex.setText("Sex : "+text);
+        personalInfo.setText("Personal Number : " + text);
     }
 
     private void CropImage() {
@@ -177,11 +191,11 @@ public class MainActivity extends AppCompatActivity {
             CropIntent.setDataAndType(uri,"image/*");
             CropIntent.putExtra("crop","true");
 
-//            crop on landscap mode
+//            crop on landscape mode aspect 7:1
 //            CropIntent.putExtra("aspectX",7);
 //            CropIntent.putExtra("aspectY",1);
 
-//            crop on potrait mode
+//            crop on portrait mode
             CropIntent.putExtra("aspectX",1);
             CropIntent.putExtra("aspectY",7);
             CropIntent.putExtra("scaleUpIfNeeded",true);
@@ -234,7 +248,9 @@ public class MainActivity extends AppCompatActivity {
         uri = Uri.fromFile(file);
         CamIntent.putExtra(MediaStore.EXTRA_OUTPUT,uri);
         CamIntent.putExtra("data",true);
-        startActivityForResult(CamIntent,CAMERA_REQUEST);
+        if (CamIntent.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(CamIntent, CAMERA_REQUEST);
+        }
     }
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -272,7 +288,7 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 top = data.substring(0, 44);
                 under = data.substring(44, data.length());
-                top = top.replaceAll("<<<..*<$", "");
+                top = top.replaceAll("<<<..*$", "");
                 top = top.replaceAll("<<", "/");
                 top = top.replaceFirst("<", "/");
                 top = top.replaceAll("<", " ");
@@ -289,8 +305,8 @@ public class MainActivity extends AppCompatActivity {
                 Sex = under.substring(20, 21);
                 exp = under.substring(21, 27);
                 PersonInfo = under.substring(28, 42);
-                PersonInfo = PersonInfo.replaceAll("<", "");
-                if (PersonInfo.compareToIgnoreCase("") == 0) {
+                PersonInfo = PersonInfo.replaceAll("<", " ");
+                if (PersonInfo.compareToIgnoreCase("              ") == 0) {
                     PersonInfo = "-";
                 }
                 type.setText("Passport Type : " + textFromTop[0]);
@@ -364,7 +380,6 @@ public class MainActivity extends AppCompatActivity {
             else if ( i%3 == 1 ) factor = 3;
             else factor = 1;
             sum+=(val*factor);
-//            Toast.makeText(this,"-----"+i+" : "+text[i]+"-----\nreturn val: "+val+"\nfactor: "+factor+"\n-----sum: "+sum+"-----",Toast.LENGTH_SHORT).show();
         }
         temp=data;
         if (sum%10 == checkbit) {
