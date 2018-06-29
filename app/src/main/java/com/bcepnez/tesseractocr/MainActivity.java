@@ -42,7 +42,6 @@ public class MainActivity extends AppCompatActivity {
     private static final int CROP = 2;
     Intent CamIntent,GalIntent,CropIntent;
     Toolbar toolbar;
-    File file;
     Uri uri;
     ImageView imageView;
     Bitmap bitmap;
@@ -86,7 +85,6 @@ public class MainActivity extends AppCompatActivity {
         imageView1 = (ImageView)findViewById(R.id.logo);
         linearLayout = (LinearLayout) findViewById(R.id.linearLayout);
         home();
-
     }
 
     private void RequestRuntimePermission() {
@@ -97,8 +95,6 @@ public class MainActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(MainActivity.this,new String[]{Manifest.permission.CAMERA},RequestRuntimePermissionCode);
         }
     }
-
-    Bitmap test;
 
     private void home() {
         imageView1.setVisibility(View.VISIBLE);
@@ -123,10 +119,8 @@ public class MainActivity extends AppCompatActivity {
         CamIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         CamIntent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
         startActivityForResult(CamIntent, CAMERA_REQUEST);
-
     }
     private Bitmap getBitmap(Bitmap originalBitmap,int startX,int startY){
-//        originalBitmap = Bitmap.createScaledBitmap(originalBitmap,1944,2896,false);
         Bitmap bmp = Bitmap.createBitmap(originalBitmap,startX,startY,(int)(originalBitmap.getWidth()*0.2),(int)(originalBitmap.getHeight()*0.85));
         crop=true;
         return bmp;
@@ -141,13 +135,6 @@ public class MainActivity extends AppCompatActivity {
                 bitmap = getBitmap(temp,(int)(temp.getWidth()*0.7),(int)(temp.getHeight()*0.07) );
                 bitmap = rotate(bitmap,90);
             }
-//            Bitmap temp = (Bitmap)data.getExtras().get("data");
-//            bitmap = getBitmap(temp,(int)(temp.getWidth()*0.7),(int)(temp.getHeight()*0.1) );
-//            Toast.makeText(this,"1 : "+temp,Toast.LENGTH_SHORT).show();
-//            Toast.makeText(this,"1 H : "+bitmap.getHeight(),Toast.LENGTH_SHORT).show();
-//            Toast.makeText(this,"1 W : "+bitmap.getWidth(),Toast.LENGTH_SHORT).show();
-//            bitmap = rotate(bitmap,90);
-//            if (!crop){ CropImage(); }
         }
         else if (requestCode == RESULT_LOAD_IMAGE && resultCode == Activity.RESULT_OK  && !crop ) {
             if(data!= null && data.getData()!=null){
@@ -175,7 +162,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         if (crop){
-            String text =tesseractOCR();
+            tesseractOCR();
             imageView.setVisibility(View.VISIBLE);
             imageView1.setVisibility(View.INVISIBLE);
             linearLayout.setVisibility(View.VISIBLE);
@@ -191,7 +178,7 @@ public class MainActivity extends AppCompatActivity {
         return bitmap1;
     }
 
-    private String tesseractOCR(){
+    private void tesseractOCR(){
         Toast.makeText(this,"OCR In progress!",Toast.LENGTH_SHORT).show();
         bitmap = toGrayscale(bitmap);
         String text = manager.startRecognizer(bitmap);
@@ -205,7 +192,6 @@ public class MainActivity extends AppCompatActivity {
             nodata("null");
         }
         crop = false;
-        return text;
     }
 
     private void nodata(String text){
@@ -226,11 +212,6 @@ public class MainActivity extends AppCompatActivity {
             CropIntent = new Intent("com.android.camera.action.CROP");
             CropIntent.setDataAndType(uri,"image/*");
             CropIntent.putExtra("crop","true");
-
-//            crop on landscape mode aspect 7:1
-//            CropIntent.putExtra("aspectX",7);
-//            CropIntent.putExtra("aspectY",1);
-
 //            crop on portrait mode
             CropIntent.putExtra("aspectX",1);
             CropIntent.putExtra("aspectY",7);
@@ -263,7 +244,6 @@ public class MainActivity extends AppCompatActivity {
         }
         return true;
     }
-
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -323,10 +303,6 @@ public class MainActivity extends AppCompatActivity {
                 }
                 type.setText("Passport Type : " + textFromTop[0]);
                 if (textFromTop[1].length() == 1) {
-//                nationality = under.substring(10,11);
-//                    issueCountry.setText("Issuing Country  : " + codeMeans.decode("D"));
-//                    lastname.setText("Lastname : " + textFromTop[2]);
-//                    name.setText("Firstname : " + textFromTop[3]);
                     nation = "D";
                     issueC = "D";
                     lastName = textFromTop[2];
@@ -369,6 +345,7 @@ public class MainActivity extends AppCompatActivity {
             return false;
         }
     }
+
     private void setTextTotextView (){
         TextView chktxt0 = (TextView)findViewById(R.id.checktext0);
         MakeItAlpha alp = new MakeItAlpha();
