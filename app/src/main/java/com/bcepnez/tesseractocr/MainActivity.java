@@ -6,6 +6,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
@@ -18,6 +19,7 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -51,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
     String temp;
     ImageView imageView1,tester;
     LinearLayout linearLayout;
+    String pictureImagePath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,10 +99,55 @@ public class MainActivity extends AppCompatActivity {
     }
 
     Bitmap test;
+
+    private void home() {
+        imageView1.setVisibility(View.VISIBLE);
+        imageView.setVisibility(View.INVISIBLE);
+        linearLayout.setVisibility(View.INVISIBLE);
+        textView.setText("                            Welcome to OCR Generator!\n                                 Please Input file to OCR");
+    }
+
+    private void openGallery() {
+        GalIntent = new Intent(Intent.ACTION_PICK,
+                MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+        startActivityForResult(GalIntent,RESULT_LOAD_IMAGE);
+    }
+
+    private void openCamera() {
+        String imageFileName = "File"+String.valueOf(System.currentTimeMillis())+".jpg";
+        File storageDir = Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_PICTURES);
+        pictureImagePath = storageDir.getAbsolutePath() + "/" + imageFileName;
+        File file = new File(pictureImagePath);
+        Uri outputFileUri = Uri.fromFile(file);
+        CamIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        CamIntent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
+        startActivityForResult(CamIntent, CAMERA_REQUEST);
+
+    }
+    private Bitmap getBitmap(Bitmap originalBitmap,int startX,int startY){
+//        originalBitmap = Bitmap.createScaledBitmap(originalBitmap,1944,2896,false);
+        Bitmap bmp = Bitmap.createBitmap(originalBitmap,startX,startY,(int)(originalBitmap.getWidth()*0.2),(int)(originalBitmap.getHeight()*0.85));
+        crop=true;
+        return bmp;
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK && !crop ){
-            if (!crop){ CropImage(); }
+            File imgfile = new File(pictureImagePath);
+            if (imgfile.exists()){
+                Bitmap temp = BitmapFactory.decodeFile(imgfile.getAbsolutePath());
+                bitmap = getBitmap(temp,(int)(temp.getWidth()*0.7),(int)(temp.getHeight()*0.07) );
+                bitmap = rotate(bitmap,90);
+            }
+//            Bitmap temp = (Bitmap)data.getExtras().get("data");
+//            bitmap = getBitmap(temp,(int)(temp.getWidth()*0.7),(int)(temp.getHeight()*0.1) );
+//            Toast.makeText(this,"1 : "+temp,Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this,"1 H : "+bitmap.getHeight(),Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this,"1 W : "+bitmap.getWidth(),Toast.LENGTH_SHORT).show();
+//            bitmap = rotate(bitmap,90);
+//            if (!crop){ CropImage(); }
         }
         else if (requestCode == RESULT_LOAD_IMAGE && resultCode == Activity.RESULT_OK  && !crop ) {
             if(data!= null && data.getData()!=null){
@@ -216,30 +264,7 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    private void home() {
-        imageView1.setVisibility(View.VISIBLE);
-        imageView.setVisibility(View.INVISIBLE);
-        linearLayout.setVisibility(View.INVISIBLE);
-        textView.setText("                            Welcome to OCR Generator!\n                                 Please Input file to OCR");
-    }
 
-    private void openGallery() {
-        GalIntent = new Intent(Intent.ACTION_PICK,
-                MediaStore.Images.Media.INTERNAL_CONTENT_URI);
-        startActivityForResult(GalIntent,RESULT_LOAD_IMAGE);
-    }
-
-    private void openCamera() {
-        CamIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        file = new File(Environment.getExternalStorageDirectory(),
-                "File"+String.valueOf(System.currentTimeMillis())+".jpg" );
-        uri = Uri.fromFile(file);
-        CamIntent.putExtra(MediaStore.EXTRA_OUTPUT,uri);
-        CamIntent.putExtra("data",true);
-        if (CamIntent.resolveActivity(getPackageManager()) != null) {
-            startActivityForResult(CamIntent, CAMERA_REQUEST);
-        }
-    }
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode){
